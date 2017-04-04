@@ -13,11 +13,27 @@ from pylab import *
 #Functions go here
 #-----------------------------
  
+def nearby_cells(i,j,size): #generates a matrix of nearby cells with Moore's neighborhood
+    
+    nearx = []; neary = []; #nearx and neary will contain indices of nearby cells
+    for m in range(-1,2):
+        for n in range(-1,2):
+            
+            if not (m == 0 and n == 0): #ignore the point i,j
+                
+                  nearx.append( (j+m)%size ); neary.append( (i+n)%size ); #j (column) controls x axis and i (row) controls y                
+    
+    return nearx,neary
+
 
 def move_shark(i,j,sharks,fish,sharkmove,fishmove,size):
     
+    #find nearby cells
     
+    nearx, neary = nearby_cells(i,j,size)
     
+    print nearx
+    print neary
     #see if there are any fish nearby
     
     
@@ -93,9 +109,8 @@ for time in range(0,timesteps):
                 #function to move shark/eat fish
                 if sharkmove[i,j] == time: #make sure shark has not already moved
     
-                    move_shark(i,j,sharks,fish,sharkmove,fishmove)
+                    move_shark(i,j,sharks,fish,sharkmove,fishmove,size)
                 
-                print 'Dummy script'
                 
             if fish[i,j]>-1:
                 
@@ -106,5 +121,5 @@ for time in range(0,timesteps):
                 
                 #function to move fish
                 
-                print 'Dummy script'
+                a=2
         
