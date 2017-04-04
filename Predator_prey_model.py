@@ -7,17 +7,72 @@ Created on Tue Apr 04 01:32:44 2017
 
 
 from pylab import *
-
+import random
 
 #-----------------------------
 #Functions go here
 #-----------------------------
+ 
+def nearby_cells(i,j,size): #generates a matrix of nearby cells with Moore's neighborhood
+    
+    nearby = [0,0] #nearx and neary will contain indices of nearby cells
+    for m in range(-1,2):
+        for n in range(-1,2):
+            
+            if not (m == 0 and n == 0): #ignore the point i,j
+            
+                newrow = [ (j+m)%size , (i+n)%size] #j (column) controls x axis and i (row) controls y
+                nearby = vstack([nearby, newrow])
+                                
+    nearby = delete(nearby, (0), axis=0)
+    
+    #shuffle nearby cells!
+    
+    random.shuffle(nearby)
+    
+    return nearby
 
-def move_shark():
+
+def move_shark(i,j,sharks,fish,sharkmove,fishmove,size,time):
     
-    #move shark 
-    print('Dummy script 2')
+    #find nearby cells
     
+    nearby = nearby_cells(i,j,size) #remember that this matrix is already shuffled so no need to worry about randomzing directions adn stuff later!
+    
+    #see if there are any fish nearby
+    
+    for count in range(0,8):
+        
+        if fish[ nearby[count,0] , nearby[count,1] ] > -1 :
+            
+            
+            sharks[nearby[count,0] , nearby[count,1]] = 0 #shark eats fish and starve resets to zero
+            fish[nearby[count,0] , nearby[count,1]] = -1 #fish gets eaten, awww
+            sharks[i,j] = -1
+            sharkmove[nearby[count,0] , nearby[count,1]] = time + 1
+
+
+    #if no fish, move into empty spot
+    
+    if sharks[i,j] > -1: #if the shark has not moved to eat fish
+        
+        for count in range(0,8):
+            
+            if sharks[ nearby[count,0] , nearby[count,1] ] < -1:
+                
+                sharks[nearby[count,0] , nearby[count,1]] = sharks[i,j] + 1 #move shark and increase its age
+                
+                sharks[i,j] = -1
+
+                sharkmove[nearby[count,0] , nearby[count,1]] = time + 1
+
+                
+                
+    
+    
+
+    
+    return sharks,fish,sharkmove
 
 
 #--------------------------------------
@@ -26,14 +81,16 @@ def move_shark():
 
 seed() #define seed
 
-size = 20 #size of domain
-timesteps = 100 #runtime fo the program
+size = 10 #size of domain
+timesteps = 10000 #runtime fo the program
 
 #sharks holds locations and ages of all sharks
 #fish holds locations and ages of all fish
 
 sharks = np.zeros((size,size)) - 1 #-1 means no fish, anything higher is the age of the fish
 fish = np.zeros((size,size)) - 1
+
+
 
 #sharkmove keeps track of whether you have already moved a shark
 #fishmove keeps track of whether you have already moved a fish 
@@ -45,8 +102,8 @@ fishmove = zeros((size,size))
 #generate sharks and fish on matrix without overlapping shark and fish
 #----------------------------------------------------------------------
 
-genshark = 40.0/size**2 #determines approximate number of sharks generated
-genfish = 40.0/size**2 #determines approxiamte number of fish generated
+genshark = 20.0/size**2 #determines approximate number of sharks generated
+genfish = 20.0/size**2 #determines approxiamte number of fish generated
 
 for i in range(0,size): #iterated through all cells in the matrix
     
@@ -58,7 +115,7 @@ for i in range(0,size): #iterated through all cells in the matrix
         elif rand() < genfish: #if you don't insert shark, toss coin to insert fish
             fish[i,j] = 0    
 
-
+imshow(fish)
 #--------------------------------------
 #run simulation
 #--------------------------------------
@@ -75,22 +132,29 @@ for time in range(0,timesteps):
                 
                 #function to see if shark dies (if it's dying, may as well die before it mover or procreates)
                 
+                
+                
                 #function to see if shark is ready to reproduce
+                
+                
                 
                 #function to move shark/eat fish
                 
-                move_shark()
+                if sharkmove[i,j] == time: #make sure shark has not already moved
+    
+                    sharks,fish,sharkmove = move_shark(i,j,sharks,fish,sharkmove,fishmove,size,time)
                 
-                print 'Dummy script'
                 
             if fish[i,j]>-1:
                 
                 
                 #function to see if fish dies (if it's dying, may as well die before it mover or procreates)
                 
+                
                 #function to see if fish is ready to reproduce
+                
                 
                 #function to move fish
                 
-                print 'Dummy script'
+                a=2
         
