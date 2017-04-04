@@ -15,37 +15,38 @@ from pylab import *
  
 def nearby_cells(i,j,size): #generates a matrix of nearby cells with Moore's neighborhood
     
-    nearx = []; neary = []; #nearx and neary will contain indices of nearby cells
+    nearby = [0,0] #nearx and neary will contain indices of nearby cells
     for m in range(-1,2):
         for n in range(-1,2):
             
             if not (m == 0 and n == 0): #ignore the point i,j
-                
-                  nearx.append( (j+m)%size ); neary.append( (i+n)%size ); #j (column) controls x axis and i (row) controls y                
-    
-    return nearx,neary
+            
+                newrow = [ (j+m)%size , (i+n)%size] #j (column) controls x axis and i (row) controls y
+                nearby = vstack([nearby, newrow])
+                                
+    nearby = delete(nearby, (0), axis=0)
+    return nearby
 
 
 def move_shark(i,j,sharks,fish,sharkmove,fishmove,size):
     
     #find nearby cells
     
-    nearx, neary = nearby_cells(i,j,size)
+    nearby = nearby_cells(i,j,size)
     
-    print nearx
-    print neary
+    print nearby
+    
     #see if there are any fish nearby
     
-    
-    
+    fishnearx = []; fishneary = [];
+
+
+
     #if no fish see how many empty spots there are
     
     #choose an empty spot to move into
 
     
-    
-    
-    print('Dummy script 2')
     
 
 
