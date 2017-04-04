@@ -12,10 +12,23 @@ from pylab import *
 #-----------------------------
 #Functions go here
 #-----------------------------
+ 
 
-def move_shark():
+def move_shark(i,j,sharks,fish,sharkmove,fishmove,size):
     
-    #move shark 
+    
+    
+    #see if there are any fish nearby
+    
+    
+    
+    #if no fish see how many empty spots there are
+    
+    #choose an empty spot to move into
+
+    
+    
+    
     print('Dummy script 2')
     
 
@@ -78,8 +91,9 @@ for time in range(0,timesteps):
                 #function to see if shark is ready to reproduce
                 
                 #function to move shark/eat fish
-                
-                move_shark()
+                if sharkmove[i,j] == time: #make sure shark has not already moved
+    
+                    move_shark(i,j,sharks,fish,sharkmove,fishmove)
                 
                 print 'Dummy script'
                 
