@@ -13,7 +13,11 @@ from pylab import *
 #Functions go here
 #-----------------------------
 
-
+def move_shark():
+    
+    #move shark 
+    print('Dummy script 2')
+    
 
 
 #--------------------------------------
@@ -34,8 +38,8 @@ fish = np.zeros((size,size)) - 1
 #sharkmove keeps track of whether you have already moved a shark
 #fishmove keeps track of whether you have already moved a fish 
 
-sharkmove = zeros((size.size))
-fishmove = zeros((size.size))
+sharkmove = zeros((size,size))
+fishmove = zeros((size,size))
 
 #----------------------------------------------------------------------
 #generate sharks and fish on matrix without overlapping shark and fish
@@ -75,6 +79,7 @@ for time in range(0,timesteps):
                 
                 #function to move shark/eat fish
                 
+                move_shark()
                 
                 print 'Dummy script'
                 
