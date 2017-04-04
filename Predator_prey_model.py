@@ -115,7 +115,7 @@ for i in range(0,size): #iterated through all cells in the matrix
         elif rand() < genfish: #if you don't insert shark, toss coin to insert fish
             fish[i,j] = 0    
 
-imshow(fish)
+
 #--------------------------------------
 #run simulation
 #--------------------------------------
@@ -156,5 +156,6 @@ for time in range(0,timesteps):
                 
                 #function to move fish
                 
-                a=2
-        
+                a=2 #dummy script; delet later on
+                
+#sharks seem to be doing their job as expected        
