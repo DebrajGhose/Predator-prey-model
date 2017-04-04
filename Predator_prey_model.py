@@ -75,6 +75,7 @@ for time in range(0,timesteps):
                 
                 #function to move shark/eat fish
                 
+                
                 print 'Dummy script'
                 
             if fish[i,j]>-1:
