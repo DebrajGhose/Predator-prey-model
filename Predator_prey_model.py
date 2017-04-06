@@ -25,8 +25,8 @@ def spawn_shark(a,b):
         #reset shark ages if it spawns
         sharks[a,b]=0
         sharks[i,j]=0 #create new shark
+        sharkstarve[i,j] = sharkstarve[a,b] #baby shark still needs food. Without this condition, shark population can continue to thrive after fish are dead
         sharkmove[i,j]=time #baby shark does not move
-        sharkstarve[i,j]=0 #baby shark starts afresh
         totalsharks[time] = totalsharks[time]+1
 
  
@@ -109,7 +109,7 @@ def move_and_spawn_shark():
 
             spawn_shark(nearby[count,0] , nearby[count,1])
             
-            doneteating = 1 #indicate that the shark has finished feeding
+            doneeating = 1 #indicate that the shark has finished feeding
             
         
 
@@ -148,6 +148,7 @@ def move_and_spawn_shark():
     if sharks[i,j] > -1:
         
         sharks[i,j] = sharks[i,j] + 1
+        sharkstarve[i,j] = sharkstarve[i,j] + 1 #shark gets a little hungrier
 
 ########################################
 ########################################
@@ -235,44 +236,45 @@ fishmove = zeros((size,size))
 #-------------------------------------------------------------
 # parameters for shark and fish
 #--------------------------------------------------------------
-sharkspawn = 10 #age at which shark spawns
-fishspawn = 4 #age at which fish spawns
-sharkfamished = 5 #if shark does not get food within this time, it dies
+sharkspawn = 30 #age at which shark spawns
+fishspawn = 1 #age at which fish spawns
+sharkfamished = 1 #if shark does not get food within this time, it dies
 
-#----------------------------------------------------------------------
-#generate sharks and fish on matrix without overlapping shark and fish
-#----------------------------------------------------------------------
-
-genshark = 10.0/size**2 #determines approximate number of sharks generated
-genfish = 70.0/size**2 #determines approxiamte number of fish generated
-
-decount = 0
-
-for i in range(0,size): #iterated through all cells in the matrix
-    
-    for j in range(0,size):
-        
-        #toss coin to insert shark
-        if rand() < genshark: 
-            
-            sharks[i,j] = 0
-        
-         #if you don't insert shark, toss coin to insert fish
-        elif rand() < genfish:
-            
-            fish[i,j] = 0    
-
-
-totalsharks = [0.0]*timesteps
+totalsharks = [0.0]*timesteps #keep track of number of sharks and fish
 totalfish = [0.0]*timesteps
 
+totalsharks[0] = 1
+totalfish[0] = 50
+
+#place sharks
+
+sharkleft = totalsharks[0]
+
+while sharkleft > 0:
+    
+    a = int(round(rand()*(size-1))) ; b = int(round(rand()*(size-1))); #indices where you place fish  
+    
+    if (sharks[a,b] == -1):
+        sharks[a,b] = 0
+        sharkleft = sharkleft-1
+
+fishleft = totalfish[0] #keeping track of how many fish I have left to place
+       
+#place fish
+    
+while fishleft > 0:
+    
+    a = int(round(rand()*(size-1))) ; b = int(round(rand()*(size-1))); #indices where you place fish      
+    
+    if (sharks[a,b] == -1) and (fish[a,b]==-1):
+        fish[a,b] = 0
+        fishleft = fishleft-1 #count down till all fish are placed on the grid
+        
 #generate matrix that keeps track of when shark has last eaten
 
 sharkstarve = np.copy(sharks)
 
 
-totalsharks[0] = sum(sharks) + size**2
-totalfish[0] = sum(fish) + size**2 #calculates total sharks/fish at initial timepoint, this hack works because the matrix has only -1s and 0s. Don't use this method for later timesteps
 
 #--------------------------------------
 #run simulation
