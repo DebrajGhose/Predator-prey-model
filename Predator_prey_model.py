@@ -209,7 +209,7 @@ def spawn_fish(a,b):
 #simulation parameters
 #--------------------------------------
 
-seed(1) #define seed
+seed() #define seed
 
 
 #using global variables for most things because 1) definitions remian same across functions 2) easy readability
@@ -218,7 +218,7 @@ global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalshar
 
 
 size = 10 #size of domain
-timesteps = 100 #runtime fo the program
+timesteps = 400 #runtime fo the program
 
 #sharks holds locations and ages of all sharks
 #fish holds locations and ages of all fish
@@ -236,15 +236,15 @@ fishmove = zeros((size,size))
 # parameters for shark and fish
 #--------------------------------------------------------------
 sharkspawn = 10 #age at which shark spawns
-fishspawn = 5 #age at which fish spawns
-sharkfamished = 6 #if shark does not get food within this time, it dies
+fishspawn = 4 #age at which fish spawns
+sharkfamished = 5 #if shark does not get food within this time, it dies
 
 #----------------------------------------------------------------------
 #generate sharks and fish on matrix without overlapping shark and fish
 #----------------------------------------------------------------------
 
 genshark = 10.0/size**2 #determines approximate number of sharks generated
-genfish = 10.0/size**2 #determines approxiamte number of fish generated
+genfish = 70.0/size**2 #determines approxiamte number of fish generated
 
 decount = 0
 
