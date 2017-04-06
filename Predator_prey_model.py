@@ -26,6 +26,7 @@ def spawn_shark(a,b):
         sharks[a,b]=0
         sharks[i,j]=0 #create new shark
         sharkmove[i,j]=time #baby shark does not move
+        sharkstarve[i,j]=0 #baby shark starts afresh
         totalsharks[time] = totalsharks[time]+1
 
  
@@ -98,7 +99,7 @@ def move_and_spawn_shark():
 
 
             fish[nearby[count,0] , nearby[count,1]] = -1 #fish gets eaten, awww
-            totalfish[time] = totalfish[time] - 1 #how many fish are eaten from previous timestep
+            totalfish[time] = totalfish[time] - 1 #lower total fish when fish get eaten
 
             sharkmove[nearby[count,0] , nearby[count,1]] = time
 
@@ -147,24 +148,58 @@ def move_and_spawn_shark():
         
         sharks[i,j] = sharks[i,j] + 1
 
-"""      
-    #if shark has moved out of its current spot and is old enough, it is safe to reproduce            
-    
-    if (sharks[ nearby[count,0] , nearby[count,1] ]> sharkspawn) and (sharks[i,j] < 0):
-        
-        sharks[[ nearby[count,0] , nearby[count,1] ]] = 0 #reset shark ages to 0
-        sharkstarve[[ nearby[count,0] , nearby[count,1] ]] = 0 #baby sharks don't starve
-        
+########################################
+########################################
 
-        sharks[i,j] = 0
-        sharkstarve[i,j] = 0 #baby sharks don't starve
+def move_and_spawn_fish():
+    
+    #global variables
+    
+    
+    global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalsharks ,totalfish, sharkspawn, fishspawn , sharkstarve, sharkfamished
 
-        sharkmove[i,j] = time #baby shark does not move in this time step
+  
+    #find nearby cells
     
-        totalsharks[time] = totalsharks[time] + 1
-        #print totalsharks[time]
+    nearby = nearby_cells() #remember that this matrix is already shuffled so no need to worry about randomzing directions  later!
     
-"""
+
+    
+    for count in range(0,8):
+        
+        if (sharks[ nearby[count,0] , nearby[count,1] ] == -1) and (fish[ nearby[count,0] , nearby[count,1] ] == -1): #look for empty spot
+            
+            fish[nearby[count,0] , nearby[count,1]] = fish[i,j] #move fish
+            fish[i,j] = -1                    
+           
+            fishmove[nearby[count,0] , nearby[count,1]] = time
+
+            spawn_fish(nearby[count,0] , nearby[count,1])
+
+            break
+
+
+########################################
+########################################
+
+def spawn_fish(a,b):
+    #shark will only spawn if it has already moved
+    global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalsharks ,totalfish, sharkspawn, fishspawn , sharkstarve, sharkfamished
+    
+    #see if fish is mature enough to spawn
+    if fish[a,b] > fishspawn:
+        #reset fish ages if it spawns
+        fish[a,b]=0
+        fish[i,j]=0 #create new shark
+        fishmove[i,j]=time #baby shark does not move
+        
+        totalfish[time] = totalfish[time]+1 #add fish
+
+ 
+############################
+############################      
+
+
 
 
 
@@ -182,7 +217,7 @@ global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalshar
 
 
 size = 10 #size of domain
-timesteps = 15 #runtime fo the program
+timesteps = 100 #runtime fo the program
 
 #sharks holds locations and ages of all sharks
 #fish holds locations and ages of all fish
@@ -199,16 +234,16 @@ fishmove = zeros((size,size))
 #-------------------------------------------------------------
 # parameters for shark and fish
 #--------------------------------------------------------------
-sharkspawn = 13 #age at which shark spawns
+sharkspawn = 10 #age at which shark spawns
 fishspawn = 5 #age at which fish spawns
-sharkfamished = 80 #if shark does not get food within this time, it dies
+sharkfamished = 6 #if shark does not get food within this time, it dies
 
 #----------------------------------------------------------------------
 #generate sharks and fish on matrix without overlapping shark and fish
 #----------------------------------------------------------------------
 
-genshark = 5.0/size**2 #determines approximate number of sharks generated
-genfish = 0/size**2 #determines approxiamte number of fish generated
+genshark = 0/size**2 #determines approximate number of sharks generated
+genfish = 10.0/size**2 #determines approxiamte number of fish generated
 
 decount = 0
 
@@ -223,6 +258,7 @@ for i in range(0,size): #iterated through all cells in the matrix
         
          #if you don't insert shark, toss coin to insert fish
         elif rand() < genfish:
+            
             fish[i,j] = 0    
 
 
@@ -273,33 +309,13 @@ for time in range(1,timesteps):
                 
             if fish[i,j]>-1:
                 
+                #make fish older
                 
-                #function to see if fish dies (if it's dying, may as well die before it mover or procreates)
+                fish[i,j] = fish[i,j] + 1
                 
+                #function to move fish and make them spawn
                 
-                #function to see if fish is ready to reproduce
-                
-                
-                #function to move fish
-                
-                a=2 #dummy script; delet later on
+                move_and_spawn_fish()
                 
 plot(totalsharks)
-imshow(sharks,interpolation='none')
-#verification
-"""
-
-for i in range(0,size):
-        for j in range(0,size):
-            
-            if sharks[i,j]>-1:
-                sharks[i,j] = 1
-            else:
-                sharks[i,j] = 0
-
-
-print sum(sharks)
-
-imshow(sharks,interpolation='none')
-
-"""
+plot(totalfish)
