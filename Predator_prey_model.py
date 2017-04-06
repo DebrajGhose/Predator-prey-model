@@ -85,7 +85,11 @@ def move_and_spawn_shark():
     #see if there are any fish nearby
     
     for count in range(0,8): 
+        
+        doneeating = 0 #shark has not yet eaten
+        
         #cycle through nearby cells (these cells have been shuffled, so the choice is random)
+        
         
         if fish[ nearby[count,0] , nearby[count,1] ] > -1 :
             
@@ -105,12 +109,9 @@ def move_and_spawn_shark():
 
             spawn_shark(nearby[count,0] , nearby[count,1])
             
-            doneteating = 1
+            doneteating = 1 #indicate that the shark has finished feeding
             
-        else:
-            
-            doneeating = 0
-            
+        
 
 
             break
@@ -242,7 +243,7 @@ sharkfamished = 6 #if shark does not get food within this time, it dies
 #generate sharks and fish on matrix without overlapping shark and fish
 #----------------------------------------------------------------------
 
-genshark = 0/size**2 #determines approximate number of sharks generated
+genshark = 10.0/size**2 #determines approximate number of sharks generated
 genfish = 10.0/size**2 #determines approxiamte number of fish generated
 
 decount = 0
