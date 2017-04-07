@@ -222,8 +222,8 @@ seed() #define seed
 global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalsharks ,totalfish, sharkspawn, fishspawn , sharkstarve, sharkfamished
 
 
-size = 30 #size of domain
-timesteps = 500 #runtime fo the program
+size = 35 #size of domain
+timesteps = 400 #runtime fo the program
 
 #sharks holds locations and ages of all sharks
 #fish holds locations and ages of all fish
@@ -242,13 +242,13 @@ fishmove = zeros((size,size))
 #--------------------------------------------------------------
 sharkspawn = 10 #age at which shark spawns
 fishspawn = 1 #age at which fish spawns
-sharkfamished = 1 #if shark does not get food within this time, it dies
+sharkfamished = 2 #if shark does not get food within this time, it dies
 
 totalsharks = [0.0]*timesteps #keep track of number of sharks and fish
 totalfish = [0.0]*timesteps
 
-totalsharks[0] = 30 #initial number of sharks
-totalfish[0] = 200 #initial number of fish
+totalsharks[0] = 70 #initial number of sharks
+totalfish[0] = 400 #initial number of fish
 
 #place sharks
 
@@ -329,3 +329,6 @@ for time in range(1,timesteps):
                 
 plot(totalsharks)
 plot(totalfish)
+xlabel('Time steps')
+ylabel('Number of animals')
+savefig('Predator_prey_output.pdf')
