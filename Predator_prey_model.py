@@ -37,7 +37,7 @@ def is_shark_starving():
     
     global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalsharks ,totalfish, sharkspawn, fishspawn , sharkstarve, sharkfamished
     
-    if sharkstarve[i,j] > sharkfamished:
+    if sharkstarve[i,j] >= sharkfamished:
         
         sharks[i,j] = -1
         sharkstarve[i,j] = -1
@@ -87,6 +87,7 @@ def move_and_spawn_shark():
     for count in range(0,8): 
         
         doneeating = 0 #shark has not yet eaten
+        donemoving = 0 #shark has spawned
         
         #cycle through nearby cells (these cells have been shuffled, so the choice is random)
         
@@ -135,7 +136,9 @@ def move_and_spawn_shark():
 
                 sharkmove[nearby[count,0] , nearby[count,1]] = time
 
-                spawn_shark(nearby[count,0] , nearby[count,1])
+                spawn_shark(nearby[count,0] , nearby[count,1]) #see if shark is mature to spawn
+                
+                donemoving = 1
 
                 break
 
@@ -145,7 +148,8 @@ def move_and_spawn_shark():
             
     #if shark has still  not been able to move at all in this time step, simply increase its age
     
-    if sharks[i,j] > -1:
+    
+    if doneeating == 0 and donemoving == 0: #if shark has not moved at all
         
         sharks[i,j] = sharks[i,j] + 1
         sharkstarve[i,j] = sharkstarve[i,j] + 1 #shark gets a little hungrier
@@ -218,8 +222,8 @@ seed() #define seed
 global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalsharks ,totalfish, sharkspawn, fishspawn , sharkstarve, sharkfamished
 
 
-size = 10 #size of domain
-timesteps = 400 #runtime fo the program
+size = 30 #size of domain
+timesteps = 500 #runtime fo the program
 
 #sharks holds locations and ages of all sharks
 #fish holds locations and ages of all fish
@@ -236,15 +240,15 @@ fishmove = zeros((size,size))
 #-------------------------------------------------------------
 # parameters for shark and fish
 #--------------------------------------------------------------
-sharkspawn = 30 #age at which shark spawns
+sharkspawn = 10 #age at which shark spawns
 fishspawn = 1 #age at which fish spawns
 sharkfamished = 1 #if shark does not get food within this time, it dies
 
 totalsharks = [0.0]*timesteps #keep track of number of sharks and fish
 totalfish = [0.0]*timesteps
 
-totalsharks[0] = 1
-totalfish[0] = 50
+totalsharks[0] = 30 #initial number of sharks
+totalfish[0] = 200 #initial number of fish
 
 #place sharks
 
@@ -281,6 +285,9 @@ sharkstarve = np.copy(sharks)
 #--------------------------------------
 
 for time in range(1,timesteps):
+    
+    #keep track of time
+    print time
     
     #start with number fo sharks and fish from previous timestep
     
