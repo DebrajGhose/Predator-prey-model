@@ -315,7 +315,7 @@ metadata = dict(title='Movie Test', artist='Matplotlib',comment='Movie support!'
 writer = FFMpegWriter(fps=15, metadata=metadata)
 fig = plt.figure()
 
-with writer.saving(fig, "GameofLife.mp4", timesteps):
+with writer.saving(fig, "Sharkmovie.mp4", timesteps):
 
 	for time in range(1,timesteps):
 		#keep track of time
