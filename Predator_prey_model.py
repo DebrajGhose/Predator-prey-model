@@ -207,7 +207,21 @@ def spawn_fish(a,b):
 
  
 ############################
-############################      
+############################  
+
+def eco_frame(fish,sharks): 
+	# a function to make a matrix that represents the location of the fish and the sharks, to be used to make a movie frame of their locations
+	gridnew = np.zeros((size,size))
+	for a in fish[0]:
+		for b in fish[1]:
+			gridnew[a,b] = 1
+		
+	for c in sharks[0]:
+		for d in sharks[1]:
+			gridnew[c,d] = 2
+	
+	return gridnew
+	   
 
 
 
@@ -304,7 +318,7 @@ sharkstarve = np.copy(sharks)
 
 
 
-gridnew = np.zeros((size,size))
+#gridnew = np.zeros((size,size))
 
 
 
@@ -357,9 +371,10 @@ with writer.saving(fig, "Sharkmovie.mp4", timesteps):
                 	move_and_spawn_fish()
             
         print 'gridding'
-        grid = np.copy(gridnew)
+        #grid = np.copy(gridnew)
+        ecosystem = eco_frame(fish,sharks)
         print('Generating frame')
-        imshow(grid,interpolation='nearest',cmap = 'viridis')
+        imshow( ecosystem, interpolation='none', cmap = 'viridis' ) 
         writer.grab_frame()
             
                 
