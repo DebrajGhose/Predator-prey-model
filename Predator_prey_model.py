@@ -244,7 +244,7 @@ global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalshar
 
 
 size = 35 #size of domain
-timesteps = 400 #runtime fo the program
+timesteps = 200 #runtime fo the program
 
 #sharks holds locations and ages of all sharks
 #fish holds locations and ages of all fish
@@ -363,9 +363,10 @@ with writer.saving(fig, "Sharkmovie.mp4", timesteps):
 
 
 plt.figure(2)                
-plot(totalsharks)
-plot(totalfish)
+plot(totalsharks,label='Predators')
+plot(totalfish,label='Prey')
 xlabel('Time steps')
 ylabel('Number of animals')
+legend()
 savefig('Predator_prey_output_1.pdf')
 
