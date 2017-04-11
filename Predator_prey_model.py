@@ -10,9 +10,6 @@ from pylab import *
 import random
 import matplotlib.animation as manimation
 
-
-
-
 #-----------------------------
 #Functions go here
 #-----------------------------
@@ -77,7 +74,6 @@ def nearby_cells(): #generates a matrix of nearby cells with Moore's neighborhoo
 def move_and_spawn_shark():
     
     #global variables
-    
     
     global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalsharks ,totalfish, sharkspawn, fishspawn , sharkstarve, sharkfamished
 
@@ -209,18 +205,25 @@ def spawn_fish(a,b):
 ############################
 ############################  
 
-def eco_frame(fish,sharks): 
-	# a function to make a matrix that represents the location of the fish and the sharks, to be used to make a movie frame of their locations
-	gridnew = np.zeros((size,size))
-	for a in fish[0]:
-		for b in fish[1]:
-			gridnew[a,b] = 1
-		
-	for c in sharks[0]:
-		for d in sharks[1]:
-			gridnew[c,d] = 2
-	
-	return gridnew
+# a function to make a matrix that represents the location of the fish and the sharks, to be used to make a movie frame of their locations
+
+def eco_frame():
+    
+    global sharks, fish, size
+    
+    gridnew = zeros((size,size))
+    for a in range(0,size):
+        for b in range(0,size):
+            
+            if sharks[a,b] > -1:
+                
+                gridnew[a,b] = 200 #set some value for the shark color
+
+            if fish[a,b] > -1:
+                
+                gridnew[a,b] = 100 #set some value to color fish
+                
+    return gridnew
 	   
 
 
@@ -304,26 +307,6 @@ sharkstarve = np.copy(sharks)
 
 #set up animation parameters
 
-
-#size = 40 #define size of the domain
-#grid = np.random.rand(size,size) #define intial condition from which game of life happens
-
-#steps = 100
-
-#threshhold = 0.9 #threshhold to grid to 1 or 0 matrix
-#low_indices = grid<threshhold #get indexes for values lower than the threshhold
-#grid[low_indices] = 0 #change values to 0
-#high_indices = grid>=threshhold
-#grid[high_indices] = 1
-
-
-
-#gridnew = np.zeros((size,size))
-
-
-
-#create figure and store as movie file
-
 FFMpegWriter = manimation.writers['ffmpeg']
 metadata = dict(title='Movie Test', artist='Matplotlib',comment='Movie support!')
 writer = FFMpegWriter(fps=15, metadata=metadata)
@@ -331,55 +314,58 @@ fig = plt.figure()
 
 with writer.saving(fig, "Sharkmovie.mp4", timesteps):
 
-	for time in range(1,timesteps):
-		#keep track of time
-		print time
+    for time in range(1,timesteps):
+        #keep track of time
+        print time
     
     	#start with number fo sharks and fish from previous timestep
     
-    	totalsharks[time] = totalsharks[time-1]
-    	totalfish[time] = totalfish[time-1]
+        totalsharks[time] = totalsharks[time-1]
+        totalfish[time] = totalfish[time-1]
     
     
     
-    	for i in range(0,size):
+        for i in range(0,size):
         	
-        	for j in range(0,size):
-        		#shark behavior
-        		if (sharks[i,j]>-1) and (sharkmove[i,j] < time ):
-        			#make shark older
-        			sharks[i,j] = sharks[i,j]+1
+            for j in range(0,size):
                 
-                	#function to see if shark dies (if it's dying, may as well die before it mover or procreates)
-                	
-                	is_shark_starving()
-                
-                	#function to move shark/eat fish and reproduce
-                
-                
-                	move_and_spawn_shark()
-                
-                
-            	if fish[i,j]>-1:
-                
-                	#make fish older
-                
-                	fish[i,j] = fish[i,j] + 1
-                
-                	#function to move fish and make them spawn
-                
-                	move_and_spawn_fish()
-            
+                #shark behavior
+                if (sharks[i,j]>-1) and (sharkmove[i,j] < time ):
+                    
+                    sharks[i,j] = sharks[i,j]+1 #make shark older
+                    
+                    #function to see if shark dies (if it's dying, may as well die before it mover or procreates)
+                    
+                    is_shark_starving()
+                    
+                    #function to move shark/eat fish and reproduce
+                    
+                    move_and_spawn_shark()
+                    
+                    
+                if fish[i,j]>-1:
+                    
+                    #make fish older
+                    
+                    fish[i,j] = fish[i,j] + 1
+                    
+                    #function to move fish and make them spawn
+                    
+                    move_and_spawn_fish()
+                    
         print 'gridding'
-        #grid = np.copy(gridnew)
-        ecosystem = eco_frame(fish,sharks)
+        ecosystem = eco_frame()
         print('Generating frame')
         imshow( ecosystem, interpolation='none', cmap = 'viridis' ) 
+        clim(0,200)
         writer.grab_frame()
             
-                
+
+
+plt.figure(2)                
 plot(totalsharks)
 plot(totalfish)
 xlabel('Time steps')
 ylabel('Number of animals')
-savefig('Predator_prey_output.pdf')
+savefig('Predator_prey_output_1.pdf')
+
