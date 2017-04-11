@@ -244,7 +244,7 @@ global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalshar
 
 
 size = 35 #size of domain
-timesteps = 200 #runtime fo the program
+timesteps = 150 #runtime fo the program
 
 #sharks holds locations and ages of all sharks
 #fish holds locations and ages of all fish
@@ -367,6 +367,12 @@ plot(totalsharks,label='Predators')
 plot(totalfish,label='Prey')
 xlabel('Time steps')
 ylabel('Number of animals')
+
 legend()
-savefig('Predator_prey_output_1.pdf')
+
+plt.figure(3)
+plot(totalsharks,totalfish)
+xlabel('Number of Sharks')
+ylabel('Number of Fish')
+savefig('Predator_prey_phase_output.pdf')
 
