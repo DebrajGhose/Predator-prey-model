@@ -244,7 +244,7 @@ global size, timesteps, sharks, fish, sharkmove, fishmove, time, i, j, totalshar
 
 
 size = 35 #size of domain
-timesteps = 200 #runtime fo the program
+timesteps = 150 #runtime fo the program
 
 #sharks holds locations and ages of all sharks
 #fish holds locations and ages of all fish
@@ -261,18 +261,15 @@ fishmove = zeros((size,size))
 #-------------------------------------------------------------
 # parameters for shark and fish
 #--------------------------------------------------------------
-sharkspawn = 10  #age at which shark spawns
-fishspawn = 2 #age at which fish spawns
-sharkfamished = 3 #if shark does not get food within this time, it dies
+sharkspawn = 10 #age at which shark spawns
+fishspawn = 1 #age at which fish spawns
+sharkfamished = 2 #if shark does not get food within this time, it dies
 
 totalsharks = [0.0]*timesteps #keep track of number of sharks and fish
 totalfish = [0.0]*timesteps
 
-#generate matrix that keeps track of when shark has last eaten
-sharkstarve = np.copy(sharks)
-
 totalsharks[0] = 70 #initial number of sharks
-totalfish[0] = 200 #initial number of fish
+totalfish[0] = 400 #initial number of fish
 
 #place sharks
 
@@ -283,8 +280,7 @@ while sharkleft > 0:
     a = int(round(rand()*(size-1))) ; b = int(round(rand()*(size-1))); #indices where you place fish  
     
     if (sharks[a,b] == -1):
-        sharks[a,b] = random.randint(0,sharkspawn)
-        sharkstarve[a,b] = random.randint(0,sharkfamished)     #randomly set the initial condition of shark
+        sharks[a,b] = 0
         sharkleft = sharkleft-1
 
 fishleft = totalfish[0] #keeping track of how many fish I have left to place
@@ -296,9 +292,14 @@ while fishleft > 0:
     a = int(round(rand()*(size-1))) ; b = int(round(rand()*(size-1))); #indices where you place fish      
     
     if (sharks[a,b] == -1) and (fish[a,b]==-1):
-        fish[a,b] = random.randint(0,fishspawn)   #random set the initial age of each fish
+        fish[a,b] = 0
         fishleft = fishleft-1 #count down till all fish are placed on the grid
         
+#generate matrix that keeps track of when shark has last eaten
+
+sharkstarve = np.copy(sharks)
+
+
 
 #--------------------------------------
 #run simulation
@@ -312,11 +313,11 @@ writer = FFMpegWriter(fps=15, metadata=metadata)
 fig = plt.figure()
 
 with writer.saving(fig, "Sharkmovie.mp4", timesteps):
-    
+
     for time in range(1,timesteps):
         #keep track of time
         print time
-              
+    
     	#start with number fo sharks and fish from previous timestep
     
         totalsharks[time] = totalsharks[time-1]
@@ -369,11 +370,9 @@ ylabel('Number of animals')
 
 legend()
 
-#try to plot the phase diagram
 plt.figure(3)
-plot(totalfish[200:timesteps],totalsharks[200:timesteps])
+plot(totalsharks,totalfish)
 xlabel('Number of Sharks')
 ylabel('Number of Fish')
 savefig('Predator_prey_phase_output.pdf')
-plt.show()
 
